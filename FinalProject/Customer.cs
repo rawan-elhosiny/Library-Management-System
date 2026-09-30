@@ -20,7 +20,7 @@ namespace FinalProject
         
         public List<Borrowing> Borrowings { get; set; }
 
-        private Customer () { }//بمنع ان انا اعمل اوبجكت فاضي 
+        private Customer () { }
         private Customer(string id, string name,string phone , string email) {
         
             Phone = phone;

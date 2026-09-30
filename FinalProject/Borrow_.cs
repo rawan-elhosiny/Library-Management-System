@@ -103,12 +103,18 @@ namespace FinalProject
             var res4 = txt_cusEmail.Text.Trim();
             using var db = new AppDbContext();
             var _customer = db.Customers.FirstOrDefault(c => c.NationalId == res2);
-            if (_customer == null)
+            bool hasUnreturned = db.Borrowings.Any(b => b.NationalId == res2 && b.IsReturned == false);
+            if (hasUnreturned)
+
+            { MessageBox.Show("This customer already has an unreturned book!"); return; }
+            
+                        if (_customer == null)
             {
                 _customer = Customer.Add(res2, res1,res3 ,res4 );
                 db.Customers.Add(_customer);
                 db.SaveChanges();
             }
+                        
             if (dgv_book.SelectedRows.Count == 0)
             {
                 MessageBox.Show("Select Book");
@@ -122,7 +128,7 @@ namespace FinalProject
                 var bookInDb = db.Books.Find(selectedBook.BookId);
                 if (bookInDb.CopiesCount > 0)
                 {
-                    bookInDb.CopiesCount--;
+                   
                     var res = Borrowing.Create(_customer, bookInDb, borrowDate, days);
                     db.Borrowings.Add(res);
                     MessageBox.Show($"Done.Price={res.TotalPrice}");
